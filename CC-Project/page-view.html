@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Converter Test</title>
+</head>
+<body>
+    <h1>Serverless File Conversion</h1>
+    
+    <form id="convertForm">
+        <div>
+            <label>Source Format: 
+                <select id="sourceFormat">
+                    <option value="pdf">PDF</option>
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                </select>
+            </label>
+        </div>
+        
+        <div>
+            <label>Target Format:
+                <select id="targetFormat">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                </select>
+            </label>
+        </div>
+        
+        <div>
+            <input type="file" id="fileInput">
+        </div>
+        
+        <button type="submit">Convert</button>
+    </form>
+    
+    <div id="result" style="margin-top: 20px; display: none;">
+        <p>File converted successfully!<a id="downloadLink" href="#" target="_blank">Download Converted File</a></p>
+    </div>
+    
+    <script>
+        document.getElementById('convertForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const sourceFormat = document.getElementById('sourceFormat').value;
+            const targetFormat = document.getElementById('targetFormat').value;
+            
+            if (!fileInput.files[0]) {
+                alert('Please select a file');
+                return;
+            }
+            
+            // Replace with your API Gateway URL
+            const apiUrl = 'YOUR_API_ENDPOINT/convert';
+            
+            try {
+                const response = await fetch(${apiUrl}?sourceFormat=${sourceFormat}&targetFormat=${targetFormat}, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': application/${sourceFormat}
+                    },
+                    body: fileInput.files[0]
+                });
+                
+                const result = await response.json();
+                
+                if (result.output_url) {
+                    document.getElementById('downloadLink').href = result.output_url;
+                    document.getElementById('result').style.display = 'block';
+                } else {
+                    alert('Error: ' + JSON.stringify(result));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
